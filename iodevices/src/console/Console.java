@@ -48,10 +48,17 @@ public class Console extends Device8080 {
 
 	public Console(Byte addressIn, Byte addressOut, Byte addressStatus) {
 		super("tty", "Serial", true, addressIn, true, addressOut, addressStatus);
+		System.runFinalizersOnExit(true);
 		loadSettings();
 		openConnection();
 		inputBuffer = new LinkedList<Byte>();
 	}// Constructor -
+	
+	protected void finalize() throws Throwable{
+		closeConnection();
+		System.out.println("In finalize\n");
+		super.finalize();
+	}
 
 	@Override
 	public void byteFromCPU(Byte address, Byte value) {
@@ -133,11 +140,31 @@ public class Console extends Device8080 {
 		}// if
 	}// closeConnection
 
-//	public void setUpSerialSettings() {
-//		PortSetupDetails psd = new PortSetupDetails(terminalSettings);
-//		psd.setVisible(true);
-//		openConnection();
-//	}// setUpSerialSettings
+//	private void showConnectionString(TerminalSettings terminalSettings) {
+	public String getConnectionString(){
+		String strStopBits = "0";
+
+		switch (terminalSettings.getStopBits()) {
+		case 1:
+			strStopBits = "1";
+			break;
+		case 2:
+			strStopBits = "2";
+			break;
+		case 3:
+			strStopBits = "1.5";
+			break;
+		}// switch - stopBits
+		String[] strParity = new String[] { "None", "Odd", "Even", "Mark",
+				"Space" };
+		String getConnectionString = String.format("%s-%d-%d-%s-%s",
+				terminalSettings.getPortName(), terminalSettings.getBaudRate(),
+				terminalSettings.getDataBits(), strStopBits,
+				strParity[terminalSettings.getParity()]);
+
+		return getConnectionString;
+	}// showConnectionString
+	
 
 	public TerminalSettings getTerminalSettings() {
 		return terminalSettings;

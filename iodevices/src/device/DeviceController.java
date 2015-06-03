@@ -2,7 +2,6 @@ package device;
 
 import java.util.HashMap;
 
-import terminal.TerminalSettings;
 import console.Console;
 
 //import terminal.Terminal;	//found in project: terminalSerial
@@ -19,7 +18,7 @@ public class DeviceController {
 		inputDevices = new HashMap<Byte, Device8080>();
 		outputDevices = new HashMap<Byte, Device8080>();
 		statusDevices = new HashMap<Byte, Device8080>();
-		//TODO - adjust for serial terminal
+		// console setup ++
 		console = new Console(CONSOLE_IN,CONSOLE_OUT,CONSOLE_STATUS);
 
 		Byte deviceAddress = console.getAddressIn();
@@ -36,6 +35,7 @@ public class DeviceController {
 		if (deviceAddress != null) {
 			statusDevices.put(deviceAddress, console);
 		}// if in device
+		// console setup ++
 			
 	}// Constructor DeviceController()
 	
@@ -43,8 +43,8 @@ public class DeviceController {
 		console.setSerialConnection();
 	}//setSerialConnection
 	
-	public TerminalSettings getTerminalSettings(){
-		return console.getTerminalSettings();
+	public String getConnectionString(){
+		return console.getConnectionString();
 	}
 	public void closeConnection(){
 		console.closeConnection();

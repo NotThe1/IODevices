@@ -43,29 +43,13 @@ public class TestConsole {
 	private JFormattedTextField ftfByteReceived;
 	private JFormattedTextField ftfAllBytesReceived;
 
-	private void showConnectionString(TerminalSettings terminalSettings) {
-		String strStopBits = "0";
-
-		switch (terminalSettings.getStopBits()) {
-		case 1:
-			strStopBits = "1";
-			break;
-		case 2:
-			strStopBits = "2";
-			break;
-		case 3:
-			strStopBits = "1.5";
-			break;
-		}// switch - stopBits
-		String[] strParity = new String[] { "None", "Odd", "Even", "Mark",
-				"Space" };
-		String con = String.format("%s-%d-%d-%s-%s",
-				terminalSettings.getPortName(), terminalSettings.getBaudRate(),
-				terminalSettings.getDataBits(), strStopBits,
-				strParity[terminalSettings.getParity()]);
-
-		lblCurrentSettings.setText(con);
+	private void showConnectionString() {
+		lblCurrentSettings.setText(getConnectionString());
 	}// showConnectionString
+	
+	public String getConnectionString(){
+		return console.getConnectionString();
+	}
 
 	/**
 	 * Launch the application.
@@ -86,7 +70,7 @@ public class TestConsole {
 	private void initApplication() {
 		console = new Console((byte) 01, (byte) 01, (byte) 02);
 		TerminalSettings termininalSettings = console.getTerminalSettings();
-		showConnectionString(termininalSettings);
+		showConnectionString();
 
 	}// initApplication
 		// ----------------------------------------------------------------------------------------
@@ -273,7 +257,7 @@ public class TestConsole {
 				console.setSerialConnection();
 				TerminalSettings termininalSettings = console
 						.getTerminalSettings();
-				showConnectionString(termininalSettings);
+				showConnectionString();
 			}
 		});
 		btnSetConnectionValues.setBounds(65, 258, 191, 23);
