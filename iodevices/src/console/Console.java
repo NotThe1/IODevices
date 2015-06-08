@@ -48,17 +48,17 @@ public class Console extends Device8080 {
 
 	public Console(Byte addressIn, Byte addressOut, Byte addressStatus) {
 		super("tty", "Serial", true, addressIn, true, addressOut, addressStatus);
-		System.runFinalizersOnExit(true);
+//		System.runFinalizersOnExit(true);
 		loadSettings();
 		openConnection();
 		inputBuffer = new LinkedList<Byte>();
 	}// Constructor -
 	
-	protected void finalize() throws Throwable{
-		closeConnection();
-		System.out.println("In finalize\n");
-		super.finalize();
-	}
+//	protected void finalize() throws Throwable{
+//		closeConnection();
+//		System.out.println("In finalize\n");
+//		super.finalize();
+//	}
 
 	@Override
 	public void byteFromCPU(Byte address, Byte value) {
