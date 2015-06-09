@@ -24,6 +24,9 @@ public class Console extends Device8080 {
 	public SerialPort serialPort;
 	Queue<Byte> keyBoardBuffer;
 	Queue<Byte> inputBuffer;
+	public static final byte CONSOLE_OUTPUT_STATUS_MASK = (byte) 0X80; // ready for output
+	public static final byte CONSOLE_INPUT_STATUS_MASK = (byte) 0X7F;  // Bytes in input buffer
+	
 
 	/*
 	 * @param name device name
@@ -90,7 +93,8 @@ public class Console extends Device8080 {
 				byteToCPU = inputBuffer.poll();
 			}// while
 		} else if (address == getAddressStatus()) {
-			byteToCPU = (byte) inputBuffer.size(); // tell how many bytes in the
+			byteToCPU =  (byte) (CONSOLE_OUTPUT_STATUS_MASK |(byte)( inputBuffer.size())) ; //Set ready for output
+//			byteToCPU = (byte) inputBuffer.size(); // tell how many bytes in the
 													// buffer
 		} else {
 			byteToCPU = 0;

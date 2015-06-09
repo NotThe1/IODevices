@@ -163,12 +163,12 @@ public class TestConsole {
 		btnGetByte.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Byte b = console.byteToCPU((byte) 02);
-				if (b == 0) {
+				if ((b & Console.CONSOLE_INPUT_STATUS_MASK) == 0) {
 					// txtLog.append("There is nothing to read");
-					ftfStatusReceived.setText(b.toString());
+					ftfStatusReceived.setText(String.format("%02X", b));
 
 				} else {
-					ftfStatusReceived.setText(b.toString());
+					ftfStatusReceived.setText(String.format("%02X", b));
 					Byte byteToCPU = console.byteToCPU((byte) 01);
 					String stringFromCPU = new String(new byte[] { byteToCPU });
 					ftfByteReceived.setText(String.format("%02X - %02d - %s",
@@ -191,7 +191,7 @@ public class TestConsole {
 		btnGetStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Byte b = console.byteToCPU((byte) 02);
-				ftfStatusReceived.setText(b.toString());
+				ftfStatusReceived.setText(String.format("%02X", b));
 			}
 		});
 		btnGetStatus.setBounds(10, 25, 135, 23);
@@ -201,14 +201,13 @@ public class TestConsole {
 		btnGetAllBytes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Byte b = console.byteToCPU((byte) 02);
-				if (b == 0) {
+				if ((b & Console.CONSOLE_OUTPUT_STATUS_MASK) == 0) {
 					// txtLog.append("There is nothing to read");
-					ftfStatusReceived.setText(b.toString());
+					ftfStatusReceived.setText(String.format("%02X", b));
 
 				} else {
 					StringBuilder sb = new StringBuilder();
-	
-					while ((console.byteToCPU((byte) 02)) >= 1) {
+					while ((console.byteToCPU((byte) 02) & Console.CONSOLE_INPUT_STATUS_MASK) >= 1) {
 						Byte byteToCPU = console.byteToCPU((byte) 01);
 						String stringFromCPU = new String(
 								new byte[] { byteToCPU });
