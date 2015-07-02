@@ -39,8 +39,7 @@ public class DiskDrive {
 		try {
 			File file = new File(strPathName);
 			fileChannel = new RandomAccessFile(file,"rw").getChannel();
-			disk = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, this.totalBytesOnDisk);
-			System.out.printf(" disk size = %d%n",disk.capacity());
+			disk = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0,fileChannel.size());// this.totalBytesOnDisk);
 		} catch (IOException e) {
 			fireVDiskError((long) 1, "Physical I/O error" + e.getMessage());
 			System.err.printf("Physical I/O error - %s%n", e.getMessage());
@@ -75,6 +74,13 @@ public class DiskDrive {
 		}// if
 
 	}// resolveDiskType
+	
+	public void homeHeads(){
+		this.currentHead = 0;
+		this.currentTrack = 0;
+		this.currentSector =1;
+		this.currentAbsoluteSector=0;
+	}
 
 	private void setSectorPosition() {
 		int offset = currentAbsoluteSector * bytesPerSector;
@@ -179,6 +185,7 @@ public class DiskDrive {
 		boolean validateHead = true;
 		// between 0 and heads-1
 		if (!((head >= 0) & (head < heads))) {
+			homeHeads();		
 			fireVDiskError((long) head, "Bad head");
 			validateHead = false;
 		}// if
@@ -189,6 +196,7 @@ public class DiskDrive {
 		boolean validateTrack = true;
 		// between 0 and tracksPerHead-1
 		if (!((track >= 0) & (track < tracksPerHead))) {
+			homeHeads();
 			fireVDiskError((long) track, "Bad track");
 			validateTrack = false;
 		}// if
@@ -199,6 +207,7 @@ public class DiskDrive {
 		// between 1 andsectorsPerTrack
 		boolean validateSector = true;
 		if (!((sector > 0) & (sector <= sectorsPerTrack))) {
+			homeHeads();
 			fireVDiskError((long) sector, "Bad Sector");
 			validateSector = false;
 		}// if
@@ -209,6 +218,7 @@ public class DiskDrive {
 		// between 0 and totalSectorsOnDisk-1
 		boolean validateAbsoluteSector = true;
 		if (!((absoluteSector >= 0) & (absoluteSector < totalSectorsOnDisk))) {
+			homeHeads();
 			fireVDiskError((long) absoluteSector, "Bad absoluteSector");
 			validateAbsoluteSector = false;
 		}// if
