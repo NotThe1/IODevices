@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.util.Vector;
 
-public class MyDiskDrive {
+public class DiskDrive {
 	private int heads;
 	private int currentHead;
 	private int tracksPerHead;
@@ -28,11 +28,11 @@ public class MyDiskDrive {
 	private byte[] readSector;
 	private ByteBuffer writeSector;
 	
-	public MyDiskDrive(Path path){
+	public DiskDrive(Path path){
 		this(path.resolve(path).toString());
 	}
 
-	public MyDiskDrive(String strPathName) {
+	public DiskDrive(String strPathName) {
 		//String strPathName = path.resolve(path).toString();
 		resolveDiskType(strPathName);
 

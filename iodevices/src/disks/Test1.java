@@ -46,7 +46,7 @@ public class Test1 {
 		if (chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
 			return; // do nothing
 		}// if
-		MyDiskDrive mdd = new MyDiskDrive(chooser.getSelectedFile().getPath());
+		DiskDrive mdd = new DiskDrive(chooser.getSelectedFile().getPath());
 		mdd.setCurrentAbsoluteSector(100);
 		byte[] ans = mdd.read();
 System.out.printf("marker 1%n");
