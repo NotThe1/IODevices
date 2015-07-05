@@ -1,14 +1,13 @@
 package disks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -90,8 +89,8 @@ public class MakeNewDisk {
 			}// if
 		}// for - pick disk layout
 
-//		System.out.printf("Base name: %s, Extension %s:%n", fileBaseName, fileExtension);
-//		System.out.printf("ParentPath: %s %n", parentPath.getAbsolutePath());
+		// System.out.printf("Base name: %s, Extension %s:%n", fileBaseName, fileExtension);
+		// System.out.printf("ParentPath: %s %n", parentPath.getAbsolutePath());
 		targetFileName = fileBaseName + "." + fileExtension;
 		String separator = File.separator;
 		String targetAbsoluteFIleName = parentPath.getAbsolutePath() + separator + targetFileName;
@@ -110,8 +109,8 @@ public class MakeNewDisk {
 
 		}// if - file exists
 
-		try (FileChannel fc = new RandomAccessFile(f, "rw").getChannel()) {
-
+		try  {
+			FileChannel fc = new RandomAccessFile(f, "rw").getChannel();
 			MappedByteBuffer disk = fc.map(FileChannel.MapMode.READ_WRITE, 0, selectedDiskLayout.getTotalBytes());
 			ByteBuffer sector = ByteBuffer.allocate(selectedDiskLayout.bytesPerSector);
 			int sectorCount = 0;
@@ -120,9 +119,7 @@ public class MakeNewDisk {
 				disk.put(sector);
 			}
 			fc.force(true);
-			while (fc.isOpen()) {
-				fc.close();
-			}
+			fc.close();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

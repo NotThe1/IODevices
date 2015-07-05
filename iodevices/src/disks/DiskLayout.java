@@ -9,12 +9,12 @@ public enum DiskLayout {
 	F8SS (1,77,26,128,"F8SS","8\"    SS   256 KB"),
 	F8DS (2,77,26,128,"F8DS","8\"    DS   512 KB");
 	
-	 final int heads;
-	 final int tracksPerHead;
-	 final int sectorsPerTrack;
-	 final int bytesPerSector;
-	 final String fileExtension;
-	 final String descriptor;
+	public final int heads;
+	public final int tracksPerHead;
+	public final int sectorsPerTrack;
+	public final int bytesPerSector;
+	public final String fileExtension;
+	public final String descriptor;
 	
 
 	DiskLayout(int heads,int tracksPerHead,int sectorsPerTrack,int bytesPerSector,
@@ -27,14 +27,14 @@ public enum DiskLayout {
 		this.descriptor = descriptor;
 	}//Constructor
 	
-	long getTotalBytes(){
+	public long getTotalBytes(){
 		return getTotalSectorsOnDisk() * bytesPerSector;
 	}//
 	
-	int getTotalSectorsOnDisk(){
+	public int getTotalSectorsOnDisk(){
 		return heads * tracksPerHead * sectorsPerTrack;
 	}//
-	int getTotalSectorsPerHead(){
+	public int getTotalSectorsPerHead(){
 		return  tracksPerHead * sectorsPerTrack;
 	}//
 	

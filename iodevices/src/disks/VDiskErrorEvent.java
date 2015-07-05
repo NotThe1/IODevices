@@ -3,6 +3,10 @@ package disks;
 import java.util.EventObject;
 
 public class VDiskErrorEvent extends EventObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long value;
 	private String errorMessage;
 

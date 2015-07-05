@@ -21,7 +21,8 @@ public class DiskDrive {
 	private int sectorsPerHead;
 	private int totalSectorsOnDisk;
 	private long totalBytesOnDisk;
-	private Path path;
+	private String fileAbsoluteName;
+	private String fileLocalName;
 
 	private FileChannel fileChannel;
 	private MappedByteBuffer disk;
@@ -40,12 +41,15 @@ public class DiskDrive {
 			File file = new File(strPathName);
 			fileChannel = new RandomAccessFile(file,"rw").getChannel();
 			disk = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0,fileChannel.size());// this.totalBytesOnDisk);
+			fileAbsoluteName = file.getAbsolutePath();
+			fileLocalName = file.getName();
 		} catch (IOException e) {
 			fireVDiskError((long) 1, "Physical I/O error" + e.getMessage());
 			System.err.printf("Physical I/O error - %s%n", e.getMessage());
 		}// try
 		readSector = new byte[bytesPerSector];
 		writeSector = ByteBuffer.allocate(bytesPerSector);
+
 	}// Constructor
 
 	private void resolveDiskType(String drive) {
@@ -72,8 +76,14 @@ public class DiskDrive {
 		if (!validFile) {
 			fireVDiskError((long) 2, "Not a Valid disk type " + fileNameComponents[1]);
 		}// if
-
 	}// resolveDiskType
+	
+	public String getFileAbsoluteName(){
+		return this.fileAbsoluteName;
+	}//getFileAbsoluteName
+	public String getFileLocalName(){
+		return this.fileLocalName;
+	}//getFileLocalName
 	
 	public void homeHeads(){
 		this.currentHead = 0;
@@ -118,6 +128,10 @@ public class DiskDrive {
 		write(sector);
 		return;
 	}// readnext
+	
+	public long getTotalBytes(){
+		return this.totalBytesOnDisk;
+	}
 
 	public int getCurrentHead() {
 		return currentHead;
