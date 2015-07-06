@@ -1,45 +1,29 @@
 package disks;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import hardware.Core;
+import hardware.MemoryEvent;
+import hardware.MemoryTrapEvent;
+import hardware.MemoryTrapListener;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import disks.DiskControlUnit.DriveLetter;
-
-public class DiskControlUnit {
+public class DiskControlUnit implements MemoryTrapListener {
 
 	private int maxNumberOfDrives;
+	private Core core;
 	private DiskDrive[] drives;
-	//private String[] diskName;
-	//private String[] diskFullPath;
-	
+	private int currentDrive;
 
 
-	// private String[] openDiskSlots;
-
-	public DiskControlUnit(int maxNumberOfDrives) {
+	public DiskControlUnit(Core core, int maxNumberOfDrives) {
+		this.core = core;
+		core.addMemoryTrapListener(this);
 		this.maxNumberOfDrives = maxNumberOfDrives;
-		
 		drives = new DiskDrive[maxNumberOfDrives];
-		//diskName = new String[maxNumberOfDrives];
-		//diskFullPaths = new String[maxNumberOfDrives];
-		// int i = 0;
-		// openDiskSlots = new String[maxNumberOfDrives];
-		// for (DriveLetter driveLetter:DriveLetter.values()){
-		// driveNames.put(driveLetter, "");
-		// openDiskSlots[i++] = driveLetter.letter + ": - " + driveLetter.size;
-		// }
 	}// Constructor
 
-	public DiskControlUnit() {
-		this(4);
+	public DiskControlUnit(Core core) {
+		this(core, 4);
 	}// Constructor
 
 	public void addDiskDrive(int index, String fileName) {
@@ -47,65 +31,35 @@ public class DiskControlUnit {
 			JOptionPane.showMessageDialog(null, "Already Mounted", "addDiskDrive",
 					JOptionPane.WARNING_MESSAGE);
 			return;
-		}//if
-		
+		}// if
 		drives[index] = new DiskDrive(fileName);
 		return;
-		
-	}//addDiskDrive
-	
-	
-//	Map<DriveLetter, DiskDrive> getDrives() {
-//		return drives;
-//	}//
-//
-//	Map<DriveLetter, String> getDriveNames() {
-//		return driveNames;
-//	}
-//
-//	private Object[] getOpenSlots() {
-//		Object[] getOpenSlots = new Object[maxNumberOfDrives - drives.size()];
-//		int i = 0;
-//		for (DriveLetter driveLetter : DriveLetter.values()) {
-//			if (!drives.containsKey(driveLetter)) {
-//				// getOpenSlots[i++] = driveLetter.letter + ": - " + driveLetter.size;
-//				getOpenSlots[i++] = driveLetter;
-//			}// if
-//		}// for
-//		return getOpenSlots;
-//	}// getOpenSlots
-//
-//	private Object[] getMountedDisks() {
-//		if (driveNames.size() == 0) {
-//			return null;
-//		}
-//		Object[] getMountedDisks = new Object[driveNames.size()];
-//		int i = 0;
-//		Set<DriveLetter> keys = driveNames.keySet();
-//		for (DriveLetter driveLetter : keys) {
-//			getMountedDisks[i] = String.format("%s: -> %s", driveLetter.letter, driveNames.get(driveLetter));
-//		}//
-//		return getMountedDisks;
-//	}
-	public int getMaxNumberOfDrives(){
+	}// addDiskDrive
+
+	public int getMaxNumberOfDrives() {
 		return maxNumberOfDrives;
-	}//getMaxNumberOfDrives
-	
-	public DiskDrive[] getDrives(){
+	}// getMaxNumberOfDrives
+
+	public int getCurrentDrive() {
+		return currentDrive;
+	}//getCurrentDrive
+
+	public void setCurrentDrive(int currentDrive) {
+		if ((currentDrive >= 0) & (currentDrive < maxNumberOfDrives)) {
+			this.currentDrive = currentDrive;
+		}//if
+	}//setCurrentDrive
+
+	public DiskDrive[] getDrives() {
 		return drives;
+	}// getDrives
+
+	@Override
+	public void memoryTrap(MemoryTrapEvent mte) {
+		int DiskControlTable = mte.getLocation();		//
+System.out.printf("message = %s",mte.getMessage());
+System.out.printf("DiskControlTable: %04X%n",mte.getLocation());
+System.out.printf("DCT value = %02X",core.read(DiskControlTable));
 	}
-
-	public enum DriveLetter {
-		A(0),
-		B(1),
-		C(2),
-		D(3);
-
-		int index;
-
-		DriveLetter(int index) {
-			this.index = index;	
-		}// constructor
-	}//enum
 
 }// class DiskControlUnit

@@ -1,17 +1,16 @@
 package disks;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.nio.file.Files;
+import hardware.Core;
+
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+
 import java.util.Random;
-import java.util.stream.Stream;
+
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 public class Test1 {
 
@@ -19,17 +18,26 @@ public class Test1 {
 
 	public static void main(String[] args) {
 		
-		new Test1().doIt4();
-		//new Test1().doIt3();
-		//new Test1().doIt2();
-		// new Test1().doIt1();
+		new Test1().doIt5();	// Check DCU & core w/ trap
+		//new Test1().doIt4();	// invoke make new disk to check return value
+		//new Test1().doIt3();  //check out Random().nextBytes()
+		//new Test1().doIt2();	// simple read of a disk
+		//new Test1().doIt1();	// list all elements of DiskLayout- to check validity
 
 	}//main
 	
+	private void doIt5(){
+		Core core = new Core(1024);
+		DiskControlUnit dcu = new DiskControlUnit(core);
+		int location = 0X0040;		//disk control table
+		byte value = (byte) 0XFF;	// set high-order bit to start I/O
+		core.write(location, value);
+		System.out.printf("In doIt5()%n");
+		
+}
 	private void doIt4(){
-			System.out.printf("Disk = %s%n", MakeNewDisk.makeNewDisk());
-
-	}
+		System.out.printf("Disk = %s%n", MakeNewDisk.makeNewDisk());
+}
 	
 	private void doIt3(){
 		byte[] sourceData = new byte[15];

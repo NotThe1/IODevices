@@ -20,7 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import disks.DiskControlUnit.DriveLetter;
+//import disks.DiskControlUnit.DriveLetter;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -55,8 +55,8 @@ public class DiskUserInterface extends JDialog implements ActionListener {
 	private final static String NO_FILENAME = "<slot empty>";
 	private final static String NO_SIZE = "<0 KB>";
 
-	private Font activeFont;
-	private Font inActiveFont;
+
+	private JButton btnMakeNewDisk;
 
 	/**
 	 * Launch the application.
@@ -73,7 +73,7 @@ public class DiskUserInterface extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		DriveLetter selectedDriveLetter;
+//		DriveLetter selectedDriveLetter;
 		switch (ae.getActionCommand()) {
 		case "btnMountA":
 			if (btnMountA.getText().equals(MOUNT)) {
@@ -278,8 +278,7 @@ public class DiskUserInterface extends JDialog implements ActionListener {
 
 		JPanel pnlCD = new JPanel();
 		pnlCD.setLayout(null);
-		pnlCD.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 2, true), "5.25 \" Drives",
-				TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlCD.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 2, true), "8 \" Drives", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		pnlCD.setBounds(36, 187, 673, 121);
 		contentPanel.add(pnlCD);
 
@@ -336,11 +335,22 @@ public class DiskUserInterface extends JDialog implements ActionListener {
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBounds(0, 350, 740, 33);
 			getContentPane().add(buttonPane);
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			buttonPane.setLayout(null);
+			
+			btnMakeNewDisk = new JButton("Make a new Disk");
+			btnMakeNewDisk.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					MakeNewDisk.makeNewDisk();
+				}
+			});
+			btnMakeNewDisk.setBounds(10, 5, 135, 23);
+			btnMakeNewDisk.setHorizontalAlignment(SwingConstants.LEADING);
+			btnMakeNewDisk.setActionCommand("btnClose");
+			buttonPane.add(btnMakeNewDisk);
 			{
 				JButton btnClose = new JButton("Close");
+				btnClose.setBounds(654, 5, 81, 23);
 				buttonPane.add(btnClose);
-				btnClose.setHorizontalAlignment(SwingConstants.LEFT);
 				btnClose.setActionCommand("btnClose");
 				btnClose.addActionListener(this);
 				getRootPane().setDefaultButton(btnClose);
